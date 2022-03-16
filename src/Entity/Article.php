@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -23,6 +24,8 @@ class Article
     private $subtitle;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: "Ce champ ne peut être vide")]
+
     private $content;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

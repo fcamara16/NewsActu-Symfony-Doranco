@@ -22,17 +22,40 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for article in articles %}{% endfor %}
-			<tr>
-				<td>{{ article.id}}</td>
-				<td>{{ article.category.name }}</td>
-				<td>{{ artcile.title | length > 20 ? article.title | slice(0,20) ~ '...' : article.title }}</td>
-				<td>{{ article.content}}</td>
-				<td>{{ article.createdAt | date('d/m/Y') }}</td>
-				<td>{{ article.updatedAt | date('d/m/Y')}}</td>
-				<td></td>
+			{% for article in articles|reverse %}
+				<tr>
+					<td>{{ article.id}}</td>
+					<td>{{ article.category.name }}</td>
+					<td>{{ artcile.title|length > 20 ? article.title|slice(0,20) ~ '...' : article.title }}</td>
+					<td>{{ article.content|length > 20 article.content|slice(0,20) ~ '...' : article.content}}</td>
+					<td>{{ article.createdAt|date('d/m/Y') }}</td>
+					<td>{{ article.updatedAt|date('d/m/Y')}}</td>
+					<td>
+						{% if article.deletedAt is null %}
+							<a href="{{ path ('update_article', {'id': article.id} ) }}" class="btn btn-info">
+								<i class="fa fa-edit "></i>
+							</a>
 
-			</tr>
+
+							<a href="{{ path ('delete_article', {'id': article.id} ) }}" onclick="return confirm('Voulez-vous vraiment supprimer cet article ?')" class="btn btn-danger">
+								<i class="fa fa-trash "></i>
+							</a>
+						{% else %}
+							<a href="{{ path ('restore_article', {'id': article.id} ) }}" class="btn btn-outline-info">
+								<i class="fa fa-trash-restore "></i>
+							</a>
+
+
+							<a href="{{ path ('delete_article', {'id': article.id} ) }}" onclick="return confirm('Voulez-vous vraiment supprimer définitevement  cet article de la base de donnée ?')" class="btn btn-outline-danger">
+								<i class="fa fa-times-circle "></i>
+							</a>
+
+						{% endif %}
+
+					</td>
+
+				</tr>
+			{% endfor %}
 		</tbody>
 
 	</div>
