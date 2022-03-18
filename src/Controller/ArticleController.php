@@ -15,6 +15,12 @@ class ArticleController extends AbstractController
      */
     public function showArticle(Article $article, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('article/show_article.html.twig');
+        $commentaries = $entityManager->getRepository(Commentary::class)->findBy(['article' => $article->getId()]);
+        return $this->render('article/show_article.html.twig')[
+            'article' => $article,
+            'commentaries' => $commentaries,
+
+        ]
     }
+
 }
