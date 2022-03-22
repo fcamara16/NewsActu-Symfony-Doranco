@@ -1,12 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 
-	<h1 class="text-center mt-3">{{ category.name|capitalize}}</h1>
+<h1 class="text-center mt-3">{{ category.name|capitalize}}</h1>
 
-	{% for article in articles %}
+{% for article in articles %}
 
-		<div class="row">
-			<hr>
+	<div class="row">
+		<hr>
+		<a href="{{ path ('show_article', {'cat_alias': article.category.alias, 'article.alias':article.alias, 'id': article.id} ) }}" class="text-dark text-decoration-none">
 			<div class="col-8 mx-auto">
 
 
@@ -23,13 +24,24 @@
 							<p class="card-text">
 								<small class="text-muted">Dernière modification :
 									{{ article.updatedAt|date('d/m/Y')}}<span class="text-muted">
-										|Auteur</span>
+										|Auteur:
+										{{ article.author.prenom }}
+										{{ article.author.prenom }}</span>
 								</small>
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</a>
 	</div>
-{% endblock %}
+</div>
+{{% else %}}
+<div class="row">
+	<div class="mx-auto col-8">
+		<p class="alert alert-info text-center">La catégorie
+			{{ category.name}}
+			ne contient pas encore d'article.</p>
+	</div>
+
+</div>{% endfor %}{% endblock %}

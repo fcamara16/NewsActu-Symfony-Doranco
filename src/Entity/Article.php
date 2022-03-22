@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
@@ -43,6 +44,9 @@ class Article
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private $category;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    private $author;
 
     public function getId(): ?int
     {
@@ -153,6 +157,18 @@ class Article
     public function setCategory(?Categorie $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?UserInterface $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

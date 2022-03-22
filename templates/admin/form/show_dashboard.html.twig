@@ -32,21 +32,21 @@
 					<td>{{ article.updatedAt|date('d/m/Y')}}</td>
 					<td>
 						{% if article.deletedAt is null %}
-							<a href="{{ path ('update_article', {'id': article.id} ) }}" class="btn btn-info">
+							<a href="">
 								<i class="fa fa-edit "></i>
 							</a>
 
 
-							<a href="{{ path ('delete_article', {'id': article.id} ) }}" onclick="return confirm('Voulez-vous vraiment supprimer cet article ?')" class="btn btn-danger">
+							<a href="">
 								<i class="fa fa-trash "></i>
 							</a>
 						{% else %}
-							<a href="{{ path ('restore_article', {'id': article.id} ) }}" class="btn btn-outline-info">
+							<a href="">
 								<i class="fa fa-trash-restore "></i>
 							</a>
 
 
-							<a href="{{ path ('delete_article', {'id': article.id} ) }}" onclick="return confirm('Voulez-vous vraiment supprimer définitevement  cet article de la base de donnée ?')" class="btn btn-outline-danger">
+							<a href="">
 								<i class="fa fa-times-circle "></i>
 							</a>
 
@@ -57,6 +57,46 @@
 				</tr>
 			{% endfor %}
 		</tbody>
+
+		<div class="row">
+			<div class="col-6">
+				<h3 class="text-center">Toutes les catégories</h3>
+
+				<table class="table">
+					<thead>
+						<tr>
+
+							<th>Id</th>
+							<th>Nom</th>
+							<th>Crée le
+							</th>
+							<th>Modifiée le</th>
+							<th>Actions</th>
+
+
+						</tr>
+
+
+					</thead>
+					<tbody>
+						{% for category in categories %}
+
+							<tr>
+								<td>{{ category.id }}</td>
+								<td>{{ category.name}}</td>
+								<td>{{ category.createdAt|date('d/m/Y') }}</td>
+								<td>{{ category.updatedAt|date('d/m/Y') }}</td>
+
+
+							</tr>
+						</tbody>
+					</tbody>
+				</table>
+
+
+			</div>
+
+		</div>
 
 	</div>
 
