@@ -25,19 +25,17 @@
 				{% if is_granted ('ROLE_ADMIN') %}
 
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							Espace Admin
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfil" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Mon Profil
 						</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownProfil">
 							<li>
-								<a class="dropdown-item" href="{{ path('show_dashboard') }}">Dashboard</a>
+								<a class="dropdown-item" href="">Mes informations</a>
 							</li>
 							<li>
-								<a class="dropdown-item" href="{{ path('create_article') }}">Ajouter un article</a>
+								<a class="dropdown-item" href="">Mes commentaires</a>
 							</li>
-							<li>
-								<a class="dropdown-item" href="#">Ajouter une catégorie</a>
-							</li>
+
 							{#                        <li><hr class="dropdown-divider"></li>#}
 							{#                        <li><a class="dropdown-item" href="#">Something else here</a></li>#}
 						</ul>

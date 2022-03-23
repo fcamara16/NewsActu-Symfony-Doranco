@@ -6,10 +6,13 @@ use DateTime;
 use App\Entity\Article;
 use App\Entity\Categorie;
 use App\Form\ArticleFormType;
+use App\Form\CategoryFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -45,14 +48,14 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('default_home');
         }
         $articles = $entityManager->getRepository(Article::class)->findAll();
-         
+
         $categories = $entityManager->getRepository(Categorie::class)->findAll();
-        $users = $entityManager->getRepository(User::class)->findAll():
+        $users = $entityManager->getRepository(User::class)->findAll();
 
         return $this->render('admin/show_dashboard.html.twig', [
             'articles' => $articles,
-            'categories'=> $categories,
-            'users'=> $users, 
+            'categories' => $categories,
+            'users' => $users,
         ]);
     }
 
@@ -227,7 +230,7 @@ class AdminController extends AbstractController
      */
     public function restoreArticle(Article $article, EntityManagerInterface $entityManager): Response
     {
-        $article->setDeletedAt();
+        $article->setDeletedAt(null);
 
         $entityManager->persist($article);
         $entityManager->flush();
@@ -235,5 +238,106 @@ class AdminController extends AbstractController
         $this->addFlash('success', "L'article " . $article->getTitle() . " a bien été restauré");
 
         return $this->redirectToRoute("show_dashboard");
+    }
+    /**
+     * @Route("/creer-une-categorie", name="create_category", methods={"GET|POST"})
+     */
+
+
+    public function createCategory(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger): Response
+    {
+        $category = new Categorie;
+        $oldCategoryName = $category->getName();
+
+        $form = $this->createForm(CategoryFormType::class, $category)->handleRequest($request);
+        //    Création du chemin+de la vue
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $category->SetAlias($slugger->slug($category->getName()));
+            // Il y a une autre façon de procéder pour setters ces propriètés
+            // Voir Categorie Entity __Construct
+            // $category->setCreatedAt(new DateTime());
+            // $category->setUpdatedAt(new DateTime());
+
+            $entityManager->persist($category);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Vous avez ajouté la catégorie " . $category->getName() . " avec succès.");
+            return $this->redirectToRoute('show_dashboard');
+        }
+
+        return $this->render('admin/form/form_category.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    /**
+     * @Route ("/modifier-une-categorie/{id}", name="update_category", methods={"GET|POST"})
+     */
+    public function updateCategory(Categorie $category, Request $request, SluggerInterface $slugger, EntityManagerInterface $entityManager): Response
+    {
+        //Variabilisation de l'ancien nom de la catégorie pour le addFlash().
+        $oldCategoryName = $category->getName();
+
+        $form = $this->createForm(CategoryFormType::class, $category)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $category->SetAlias($slugger->slug($category->getName()));
+            $category->setUpdatedAt(new DateTime());
+
+            $entityManager->persist($category);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Vous avez modifié la catégorie " . $category->getName() . " avec succès.");
+            return $this->redirectToRoute('show_dashboard');
+        }
+
+        return $this->render('admin/form/form_category.html.twig', [
+            'form' => $form->createView(),
+            'category' => $category,
+        ]);
+    }
+    /**
+     * @Route ("/archiver-une-categorie_{id}", name="soft_delete_category", methods={"GET"})
+     */
+    public function softDeleteCategory(Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+
+        $categorie->setDeletedAt(new DateTime());
+        $entityManager->persist($categorie);
+        $entityManager->flush();
+
+        $this->addFlash('success', "La catégorie" . $categorie->getName() . "a bien été archivée");
+        return $this->redirectToRoute('show_dashboard');
+    }
+
+
+    /**
+     * @Route("/restaurer-une-categorie_{id}",name="restore_category", methods={"GET"} )
+     */
+    public function restoreCategory(Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+        $categorie->setDeletedAt(null);
+        $entityManager->persist($categorie);
+        $entityManager->flush();
+
+        $this->addFlash('success', "La catégorie" . $categorie->getName() . "a bien été restaurée");
+        return $this->redirectToRoute('show_dashboard');
+    }
+
+
+    /**
+     * @Route("/supprimer-une-categorie_{id}", name="hard_delete_category", methods={"GET"})
+     */
+    public function hardDeleteCategory(Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+
+        $categoryName = $categorie->getName();
+        $entityManager->remove($categorie);
+        $entityManager->flush();
+
+        $this->addFlash('success', "La catégorie" . $categorie->getName() . "a bien été supprimée définitivement");
+        return $this->redirectToRoute('show_dashboard');
     }
 } // END Class

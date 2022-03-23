@@ -31,17 +31,17 @@
 					<td>{{ article.createdAt|date('d/m/Y') }}</td>
 					<td>{{ article.updatedAt|date('d/m/Y')}}</td>
 					<td>
-						{% if article.deletedAt is null %}
-							<a href="">
+						{% if category.deletedAt is null %}
+							<a href="{{ path ('update_category', {'id': category.id})}}">
 								<i class="fa fa-edit "></i>
 							</a>
 
 
-							<a href="">
+							<a href="{{ path ('soft_delete_category' {'id': category.id})}}">
 								<i class="fa fa-trash "></i>
 							</a>
 						{% else %}
-							<a href="">
+							<a href="{{path ('retore_category' {'id': category.id})}}">
 								<i class="fa fa-trash-restore "></i>
 							</a>
 

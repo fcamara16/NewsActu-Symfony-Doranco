@@ -1,0 +1,27 @@
+{% extends 'bas.html.twig'%}
+
+{% block body %}
+	{% if category is not defined %}
+		<h1 class="text-center mt-3">Ajouter une catégorie</h1>
+	{% else %}
+		<h1 class="text-center mt-3">Modifier une catégorie
+			{{category.name}}</h1>
+	{% endif %}
+
+
+	<div class="row">
+		<div class="col-8 mx-auto">
+			{{ form_start(form, {'attr': (novalidate)})}}
+			<div class="mb-3">
+				{{from.row(form.name)}}
+			</div>
+
+			<button type="submit" class="d-block col-2 mx-auto btn btn-warning mb-3
+																																																	           ">Modifier</button>
+
+			{{ form_end(form)}}
+
+
+		</div>
+	</div>
+{% endblock %}
