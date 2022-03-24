@@ -18,7 +18,8 @@
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item text-center text-muted">Crée le:
-						{{ article.createdAt|date('d/m/Y H:i' )}}<span class="text-muted">Mis à jour le
+						{{ article.createdAt|date('d/m/Y H:i' )}}
+						<span class="text-muted">Mis à jour le
 							{{ article.updatedAt|date('d/m/Y H:i' ) }}</span>
 					</li>
 				</ul>
@@ -53,17 +54,48 @@
 
 					{% for commentary in commentaries %}
 
-						<div class="bg-light shadow my-2">
+						{% if commentary.deletedAt is null %}
 
-							<p class="ps-3 text-muted">Crée le:
-								{{ commentary.createdAt|date('d/m/Y') }}|Ecrit par:</p>
-							<p class="ps-3 ">{{commentary.comment}}</p>
+							<div class="bg-light shadow my-2">
+
+								<p class="ps-3 text-muted">Crée le:
+									{{ commentary.createdAt|date('d/m/Y') }}
+									| Ecrit par:
+									{{commentary.author ? commentary.author.prenom ~ ' ' ~  commentary.author.nom :"Pas d'auteur"}}
+
+
+									{% if  commentary.author is same.app.user %}
+
+										<span style="float: right" class="pe-2" onclick="return confirm('Voulez-vous archiver ce commentaire? \n\r Vous retrouverez ces commentaires dans la partie Mes commentaires de votre profil.')">
+											{# {================1ère FACON=========================}
+																																=> suite du commentaire de : CommentarController::SoftDeleteCommentary()
+																																Ici nous avons construit,avec le symbole ? dans le 'href' après le {{path()}}, dans notre URL avec les arguments nécessaires pour la redirection (voir CommentaryController)
+																																 #}
+											{#                                        <a href="{{ path('soft_delete_commentary', {'id': commentary.id}) }}?cat_alias={{ article.category.alias }}&article_alias={{ article.alias }}&article_id={{ article.id }}" class="text-danger"><i class="fa fa-times-circle"></i></a>#}
+											{# {=========================================}#}
+
+											{# {# {================2eme FACON=========================}
+																						=> Suite du commentaire de : CommentaryController::softDeleteCommentary()
+																						Ici nous nous retiré tous paramètres dans l'URL. (excepté le paramète OBLIGATOIRE de la route {id}) #}
+
+												<a href="{{ path('soft_delete_commentary', {'id': commentary.id}) }}" class="text-danger"> <i class="fa fa-times-circle"></i>
+											</a>
+
+											{# {=========================================}#}
+
+											<a href="" class="text-danger">
+												<i class=" fa fa-times-circle"></i>
+											</a>
+										</span>
+									{% endif %}
+								</p>
+								<p class="ps-3 ">{{commentary.comment}}</p>
+							</div>
+
+
 						</div>
-
 
 					</div>
 
-				</div>
 
-
-			{% endblock %}
+				{% endblock %}
