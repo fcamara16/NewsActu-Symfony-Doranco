@@ -44,6 +44,7 @@
 				{#                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
 					{#                </li>#}
 				</ul>
+				{{% render(url('render_search_bar'))%}}
 				{% if app.user %}
 					<div style="float: right; padding-right: 50px;">
 						<i class="fa fa-user text-warning"></i>

@@ -25,13 +25,27 @@ class ProfileController extends AbstractController
     /**
      * @Route ("/profile/tous-mes-commentaires", name="show_user_commentaries", methods={"GET"})
      */
-    public function showUserCommentairies(EntityManagerInterface $entityManager): Response
+    public function showUserCommentaries(EntityManagerInterface $entityManager): Response
     {
+        // Statistiques depuis le Controller (voir la vue show_user_commentaries.html.twig)
+
+        $total = count($commentaries);
+        $totalInline = count($entityManager->getRepository(Commentary::class)->findBy(['deletedAt' => null, 'author' => $this->getUser()]));
+        $totalArchived = $total = $totalInline;
+
+        // foreach($commentaries as $commentary){
+
+        // if($commentary->getDeletedAt() == null){
+        // ++$totalArchived;
+        // }
+        // }
+
         $commentaries = $entityManager->getRepository(Commentary::class)->findBy([
             'author' => $this->getUser()
         ]);
         return $this->render('profile/show_user_commentaries.html.twig', [
-            'commentaries' => $commentaries
+            'commentaries' => $commentaries,
+            'total' => $total
 
         ]);
     }

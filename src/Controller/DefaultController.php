@@ -39,4 +39,12 @@ class DefaultController extends AbstractController
             'categories' => $categories
         ]);
     }
+    /**
+     * @Route("/recherche", name="render_search_bar", methods={"GET"})
+     */
+    public function renderSearchBarInNav(): Response
+    {
+
+        return $this->render('rendered/search_bar.html.twig');
+    }
 }
